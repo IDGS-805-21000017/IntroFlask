@@ -1,19 +1,57 @@
-from flask import Flask, template_rendered, request
-from flask_cors import CORS
+from flask import Flask,render_template
 
-#Primer commit de flask
+app=Flask(__name__)
 
-app = Flask(__name__)
-CORS(app)
+@app.route("/")
+def index():
+    titulo="IDGS805"
+    lista=["Pedro,juan,Mario"]
+    return render_template("index.html",titulo=titulo,lista=lista)
 
-@app.route("/saludo", methods=['GET'])
-def saludo():
-    msg = request.args.get("msg", "Mundo")
-    return f"Hola {msg}"
+@app.route("/ejemplo1")
+def ejemplo1():
+    return render_template("ejemplo1.html")
 
-@app.route("/home")
-def home():
-    return template_rendered("<h1>Bienvenido</h1>")
+@app.route("/ejemplo2")
+def ejemplo2():
+    return render_template("ejemplo2.html")
 
-if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+
+@app.route("/Hola")
+def hola():
+    return "<h1>Hola mundooo</h1>"
+
+
+@app.route("/user/<string:user>")
+def user(user):
+    return f"hola,{user}"
+
+@app.route("/numero/<int:n>")
+def numero(n):
+    return f"El numeri es: {n}"
+
+@app.route("/user/<int:id>/<string:username>")
+def username(id,username):
+    return f"El usuario es: {username} con id: {id}"
+
+@app.route("/suma/<float:n1>/<float:n2>")
+def suma(n1, n2):
+    return f"La suma es: {n1+n2}"
+
+@app.route("/default/")
+@app.route("/default/<string:tem>")
+def func1(tem='Juan'):
+    return f"Hola, {tem}"
+
+@app.route("/form1")
+def form1():
+    return '''
+            <form>
+            <label for="nombre">Nombre:</label>
+            </form>
+    
+           '''
+
+
+if __name__=="__main__":
+    app.run(debug=True,port=3000)
