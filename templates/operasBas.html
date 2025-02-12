@@ -1,0 +1,19 @@
+{% extends "layout.html"%}
+{%block container%}
+
+<form action="/resultado" method="post">
+    <label for="n1">N1:</label>
+    <input type="text" name="n1" id="n1">
+    <label for="n2">N2:</label>
+    <input type="text" name="n2" id="n2">
+    <input type="button" id="btnCalcular" value="Calcular">
+    <input type="radio" name="group1" id="add" value="add">
+        <input type="radio" name="group1" id="subtract" value="subtract">
+        <input type="radio" name="group1" id="multiply" value="multiply">
+        <input type="radio" name="group1" id="divide" value="divide">
+        <input type="text" id="num2">
+    <br>
+    <label id="txtResultado">{{value}}</label>
+
+</form>
+{%endblock%}

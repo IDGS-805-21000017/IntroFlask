@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Cinépolis - Compra de Boletos</h2>
+    
+    <form action="/procesar" method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+        <div class="mb-3">
+            <label for="numPersonas" class="form-label">Cantidad de Compradores</label>
+            <input type="number" class="form-control" id="numPersonas" name="numPersonas" min="1" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Tarjeta Cinéco</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="tieneTarjeta" name="tieneTarjeta">
+                <label class="form-check-label" for="tieneTarjeta">Sí</label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="cantidad" class="form-label">Cantidad de Boletos</label>
+            <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Procesar</button>
+    </form>
+    
+    {% if mensaje %}
+        <div class="alert alert-warning mt-3">{{ mensaje }}</div>
+    {% endif %}
+    
+    {% if total is not none %}
+        <div class="alert alert-success mt-3">Valor a Pagar: ${{ total }}</div>
+    {% endif %}
+</div>
+{% endblock %}

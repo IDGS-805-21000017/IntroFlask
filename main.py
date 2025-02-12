@@ -1,6 +1,38 @@
-from flask import Flask,render_template
+from flask import Flask,render_template, request
+import jinja2
 
 app=Flask(__name__)
+
+class Boleto:
+    __precioBoleto: int = 12
+
+    def __init__(self, nombre: str, numPersonas: int, cantidad: int, tieneTarjeta: bool):
+        self.nombre = nombre
+        self.numPersonas = numPersonas
+        self.cantidad = cantidad
+        self.tieneTarjeta = tieneTarjeta
+        self.total = 0.0
+
+    def validar_cantidad(self):
+        max_boletos = self.numPersonas * 7
+        if self.cantidad > max_boletos:
+            return False, f"No se pueden comprar más de {max_boletos} boletos (7 por persona)."
+        if self.cantidad < 1:
+            return False, "La cantidad debe ser al menos 1."
+        return True, ""
+
+    def calcular_total(self) -> float:
+        if self.cantidad > 5:
+            self.total = self.__precioBoleto * self.cantidad * 0.85
+        elif 3 <= self.cantidad <= 5:
+            self.total = self.__precioBoleto * self.cantidad * 0.90
+        else:
+            self.total = self.__precioBoleto * self.cantidad
+
+        if self.tieneTarjeta:
+            self.total *= 0.9
+
+        return self.total
 
 @app.route("/")
 def index():
@@ -52,6 +84,52 @@ def form1():
     
            '''
 
+@app.route("/page2")
+def operas():
+    return render_template("index.html", value=0, num1=1, num2=1)
 
+
+@app.route("/resultado", methods=['POST', 'GET'])
+def resultados():
+    if request.method == "POST":
+        num1 = int(request.form.get("n1"))
+        num2 = int(request.form.get("n2"))
+        tipo = (request.form.get("group1"))
+        print(tipo)
+        total = 0
+        if tipo == "+":
+            total=num1+num2
+        elif tipo == "-":
+            total=num1-num2
+        elif tipo == "x":
+            total=num1*num2
+        elif tipo == "/":
+            total=num1/num2
+        else:
+            total = 0
+        print(total)
+        return render_template("index.html", value=total, num1=num1, num2=num2)
+
+@app.route('/cinepolis', methods=['GET'])
+def cinepolis():
+    return render_template('cinepolis.html')
+
+@app.route('/procesar', methods=['POST'])
+def procesar():
+    nombre = request.form.get('nombre')
+    numPersonas = int(request.form.get('numPersonas', 1))
+    cantidad = int(request.form.get('cantidad', 1))
+    tieneTarjeta = request.form.get('tieneTarjeta') == 'on'
+    
+    boleto = Boleto(nombre, numPersonas, cantidad, tieneTarjeta)
+    valido, mensaje = boleto.validar_cantidad()
+    total = None
+    if valido:
+        total = boleto.calcular_total()
+    
+    return render_template('cinepolis.html', mensaje=mensaje, total=total) 
+
+
+# Cinepolis Flask
 if __name__=="__main__":
     app.run(debug=True,port=3000)
