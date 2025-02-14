@@ -1,5 +1,6 @@
 from flask import Flask,render_template, request
 import jinja2
+import forms
 
 app=Flask(__name__)
 
@@ -129,6 +130,21 @@ def procesar():
     
     return render_template('cinepolis.html', mensaje=mensaje, total=total) 
 
+@app.route("/alumnos", methods=['GET','POST'])
+def alumnos():
+    mat=''
+    nom=''
+    ape=''
+    email=''
+    alumno_clase = forms.UserForm(request.form)
+    if request.method == "POST":
+        mat = alumno_clase.matricula.data
+        nom = alumno_clase.nombre.data
+        ape = alumno_clase.apellido.data
+        email = alumno_clase.email.data
+
+        print(f'Nombre: {nom}')
+    return render_template("Alumnos.html", form=alumno_clase)
 
 # Cinepolis Flask
 if __name__=="__main__":

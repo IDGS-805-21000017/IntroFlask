@@ -1,18 +1,10 @@
-{% extends "layout.html"%}
-{%block container%}
+{%extends "layout.html"%}
 
-<form action="/resultado" method="post">
-    <label for="n1">N1:</label>
-    <input type="number" name="n1" id="n1" value="{{num1}}">
-    <label for="n2">N2:</label>
-    <input type="number" name="n2" id="n2" value="{{num2}}">
-    <input type="radio" name="group1" id="add" value="+" checked>
-    <input type="radio" name="group1" id="subtract" value="-">
-    <input type="radio" name="group1" id="multiply" value="x">
-    <input type="radio" name="group1" id="divide" value="/">
-    <input type="text" id="res" value="0" readonly>
-    <br>
-    <input type="submit" id="btnCalcular" value="Calcular" value="{{value}}">
-</form>
+{% block container %}
 
-{%endblock%}
+<h1>{{titulo}}</h1>
+
+{% for value in lista %}
+<h3>{{value}}</h3>
+{%endfor%}
+{% endblock %}
