@@ -132,19 +132,16 @@ def procesar():
 
 @app.route("/alumnos", methods=['GET','POST'])
 def alumnos():
-    mat=''
-    nom=''
-    ape=''
-    email=''
+    mat, nom, ape, email='', '', '', ''
     alumno_clase = forms.UserForm(request.form)
-    if request.method == "POST":
+    if request.method == "POST" and alumno_clase.validate:
         mat = alumno_clase.matricula.data
         nom = alumno_clase.nombre.data
         ape = alumno_clase.apellido.data
         email = alumno_clase.email.data
 
         print(f'Nombre: {nom}')
-    return render_template("Alumnos.html", form=alumno_clase)
+    return render_template("Alumnos.html", form=alumno_clase, mat=mat, nom=nom, ape=ape, email=email)
 
 # Cinepolis Flask
 if __name__=="__main__":

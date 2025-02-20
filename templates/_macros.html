@@ -1,8 +1,31 @@
-{%macro datos(name, placeholder, type="text")%}
-<p><input name="{{name}}" type="{{type}}" placeholder="{{placeholder}}"></p>
-{%endmacro%}
+{% macro datos(name, placeholder, type="text") %}
+    <p><input name="{{ name }}" type="{{ type }}" placeholder="{{ placeholder }}"></p>
+{% endmacro %}
 
-{%macro campoNuevo(field)%}
-<td>{{field.label}}</td>
-<dd>{{field(**kwargs) | safe}}</dd>
-{%endmacro%}
+{% macro campoNuevo(field) %}
+    <div>
+        <label>{{ field.label }}</label>
+        <div>{{ field() }}</div>  {# Call the field directly to render it #}
+        {% if field.errors %}
+            <ul>
+                {% for error in field.errors %}
+                    <li style="color:red">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro render_field(field) %}
+<div class="form-group">
+    {{ field.label(class="form-label") }}
+    {{ field(class="form-control") }}
+    {% if field.errors %}
+        <ul class="text-danger">
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endmacro %}
