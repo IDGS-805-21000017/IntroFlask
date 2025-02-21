@@ -1,8 +1,11 @@
-from flask import Flask,render_template, request
+from flask import Flask,render_template, request, g, flash
+from flask_wtf.csrf import CSRFProtect
 import jinja2
 import forms
 
 app=Flask(__name__)
+csrf = CSRFProtect()
+app.secret_key= "IDGS805"
 
 class Boleto:
     __precioBoleto: int = 12
@@ -132,6 +135,8 @@ def procesar():
 
 @app.route("/alumnos", methods=['GET','POST'])
 def alumnos():
+    print(f'Alumno: {g.nombre}')
+
     mat, nom, ape, email='', '', '', ''
     alumno_clase = forms.UserForm(request.form)
     if request.method == "POST" and alumno_clase.validate:
@@ -141,8 +146,25 @@ def alumnos():
         email = alumno_clase.email.data
 
         print(f'Nombre: {nom}')
-    return render_template("Alumnos.html", form=alumno_clase, mat=mat, nom=nom, ape=ape, email=email)
+        mensaje = f"Bienvenido {nom}"
+        flash(mensaje)
+    return render_template("Alumnos.html", form=alumno_clase, mat=mat, nom=nom, ape=ape, email=email, csrf_token="IDGS805")
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+@app.before_request
+def before_request():
+    g.nombre="Mario"
+    print("Before 1")
+
+@app.after_request
+def after_request(response):
+    print("After 1")
+    return response
 
 # Cinepolis Flask
 if __name__=="__main__":
+    csrf.init_app(app)
     app.run(debug=True,port=3000)
